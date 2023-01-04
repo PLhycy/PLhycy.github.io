@@ -2,51 +2,51 @@ let newYearTimer = null;
 var newYear = () => {
     clearTimeout(newYearTimer);
     if (!document.querySelector('#newYear')) return;
-    // ����ʱ��� and ���ڶ���
+    // 新年时间戳 and 星期对象
     let newYear = new Date('2023-01-22 00:00:00').getTime() / 1000,
-        week = { 0: '����', 1: '��һ', 2: '�ܶ�', 3: '����', 4: '����', 5: '����', 6: '����' }
+        week = { 0: '周日', 1: '周一', 2: '周二', 3: '周三', 4: '周四', 5: '周五', 6: '周六' }
 
     time();
 
-    // ���㺯��
+    // 补零函数
     function nol(h) { return h > 9 ? h : '0' + h; };
 
     function time() {
-        // ���� ʱ�����
+        // 现在 时间对象
         let now = new Date();
 
-        // ���½� ����
+        // 右下角 今天
         document.querySelector('#newYear .today').innerHTML = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + ' ' + week[now.getDay()]
 
-        // �����������������
+        // 现在与新年相差秒数
         let second = newYear - Math.round(now.getTime() / 1000);
 
-        // С��0���ʾ�Ѿ�����
+        // 小于0则表示已经过年
         if (second < 0) {
             document.querySelector('#newYear .title').innerHTML = 'Happy New Year!';
-            document.querySelector('#newYear .newYear-time').innerHTML = '<span class="happyNewYear">�������</p>';
+            document.querySelector('#newYear .newYear-time').innerHTML = '<span class="happyNewYear">新年快乐</p>';
         } else {
-            // ����0��δ����
-            document.querySelector('#newYear .title').innerHTML = '����2023�괺�ڣ�'
+            // 大于0则还未过年
+            document.querySelector('#newYear .title').innerHTML = '距离2023年春节：'
 
-            // ����һ����ֱ����Ⱦ����
+            // 大于一天则直接渲染天数
             if (second > 86400) {
-                document.querySelector('#newYear .newYear-time').innerHTML = `<span class="day">${Math.ceil(second / 86400)}<span class="unit">��</span></span>`
+                document.querySelector('#newYear .newYear-time').innerHTML = `<span class="day">${Math.ceil(second / 86400)}<span class="unit">天</span></span>`
             } else {
-                // С��һ����ʹ��ʱ�����ʱ��
+                // 小于一天则使用时分秒计时。
                 let h = nol(parseInt(second / 3600));
                 second %= 3600;
                 let m = nol(parseInt(second / 60));
                 second %= 60;
                 let s = nol(second);
                 document.querySelector('#newYear .newYear-time').innerHTML = `<span class="time">${h}:${m}:${s}</span></span>`;
-                // ��ʱ
+                // 计时
                 newYearTimer = setTimeout(time, 1000);
             }
         }
     }
 
-    // Ԫ��Ʈ��
+    // 元宝飘落
     jQuery(document).ready(function ($) {
         $('#newYear').wpSuperSnow({
             flakes: ['https://tuchuang.voooe.cn/images/2023/01/02/yb1.webp', 'https://tuchuang.voooe.cn/images/2023/01/02/yb2.webp', 'https://tuchuang.voooe.cn/images/2023/01/02/yb3.webp'],
@@ -58,7 +58,7 @@ var newYear = () => {
         });
     });
 }
-// Pjax���䣺��û�п���Pjax����ֱ����newYear()����
-// ����Pjax������������
+// Pjax适配：若没有开启Pjax这里直接是newYear()即可
+// 开了Pjax的用以下两句
 document.addEventListener('pjax:complete', newYear);
 document.addEventListener('DOMContentLoaded', newYear);
